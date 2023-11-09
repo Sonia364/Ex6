@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -49,16 +49,46 @@ const handleLast = () => {
   }
 };
 
+const saveItems = async (newItems) => {
+  try {
+    await AsyncStorage.setItem('items', JSON.stringify(newItems));
+  } catch (error) {
+    console.error('Error saving users:', error);
+  }
+};
+
+const handleDelete = (delItem) => {
+  Alert.alert(
+    'Confirm Deletion',
+    `Are you sure you want to remove ${delItem.itemName}?`,
+    [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          const updatedItems = items.filter((item) => item.id !== delItem.id);
+          setItems(updatedItems);
+          saveItems(updatedItems);
+          navigation.goBack();
+        },
+        style: 'destructive',
+      },
+    ],
+    { cancelable: true }
+  );
+};
+
   
 
   return (
     <View style={styles.container}>
       <View style={styles.studentInfo}>
         <View style={styles.imgContainer}>
-        <Image
-              source={require('../assets/user.png')} // Path to your user image
-              style={styles.profileImage}
-              />
+        <Image source={{ uri: item.file }} style={styles.profileImage}
+            />
         </View>
         <Text style={styles.heading}>{item.itemName}</Text>
         <View style={styles.infoWrap}>
@@ -68,7 +98,13 @@ const handleLast = () => {
       
         <Text style={styles.label}>Quantity: <Text style={styles.info}>{item.quantity}</Text></Text>
         </View>
-        </View>
+      </View>
+
+      <View style={styles.delWrap}>
+      <TouchableOpacity onPress={() =>handleDelete(item)}>
+        <Text style={styles.delText}>Delete</Text>
+      </TouchableOpacity>
+      </View>
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={handleFirst}>
@@ -144,9 +180,9 @@ const styles = StyleSheet.create({
     fontWeight: 'normal'
   },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 25,
+    width: 100,
+    height: 100,
+    borderRadius: 5,
   },
   infoWrap: {
     display: 'flex',
@@ -173,6 +209,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 10
   },
+  delWrap: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: 20
+  },
+  delText: {
+    color: 'red',
+    fontWeight: 'bold'
+  }
 });
 
 export default DetailScreen;

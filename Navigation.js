@@ -33,8 +33,8 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: 'grey',
       })}
     >
-      <Tab.Screen name='HomeScreen' component={HomeScreen}  />
-      <Tab.Screen name='AddItem' component={AddItem} />
+      <Tab.Screen name='HomeScreen' component={HomeScreen}  options={{ title: 'Personal Inventory' }}/>
+      <Tab.Screen name='AddItem' component={AddItem} options={{ title: 'Add Item' }}/>
       
     </Tab.Navigator>
   );
@@ -52,7 +52,7 @@ const Navigation = () => {
         <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{ title: 'Detail' }}
+          options={{ title: null, headerBackTitle: '' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

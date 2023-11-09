@@ -75,6 +75,10 @@ const pickImage = async () => {
         };
         items.push(newItem);
         await AsyncStorage.setItem('items', JSON.stringify(items));
+        // setItemName('');
+        // setCategory('');
+        // setQuantity('');
+        // setFile('');
       }
 
       navigation.goBack();

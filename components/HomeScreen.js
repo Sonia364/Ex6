@@ -168,7 +168,7 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.container}>
         <TextInput
         style={styles.searchInput}
-        placeholder="Search Student"
+        placeholder="Search Item(s)"
         value={searchQuery}
         onChangeText={text => setSearchQuery(text)}
         />
