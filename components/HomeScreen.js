@@ -75,20 +75,20 @@ const HomeScreen = ({navigation}) => {
   }
 
   const handleSortByLastName = () => {
-    setSortBy('lastName');
+    setSortBy('itemName');
     toggleSortOrder(); // Add this line
   };
 
   const handleSortByGpa = () => {
-    setSortBy('gpa');
+    setSortBy('quantity');
     toggleSortOrder(); // Add this line
   };
 
   const sortedItems = [...filteredItems].sort((a, b) => {
-    if (sortBy === 'lastName') {
-      return (sortOrder === 'asc' ? 1 : -1) * a.lastName.localeCompare(b.lastName);
-    } else if (sortBy === 'gpa') {
-      return (sortOrder === 'asc' ? 1 : -1) * (b.gpa - a.gpa); // Sort in descending order by GPA
+    if (sortBy === 'itemName') {
+      return (sortOrder === 'asc' ? 1 : -1) * a.itemName.localeCompare(b.itemName);
+    } else if (sortBy === 'quantity') {
+      return (sortOrder === 'asc' ? 1 : -1) * (b.quantity - a.quantity); // Sort in descending order by GPA
     }
     return 0;
   });

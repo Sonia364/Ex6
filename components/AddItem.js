@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
+import { Picker } from '@react-native-picker/picker';
 
 const AddItem = ({ navigation, route }) => {
   const { item } = route.params || {};
@@ -13,6 +14,22 @@ const AddItem = ({ navigation, route }) => {
   const [quantity, setQuantity] = useState(item?.quantity ? item.quantity.toString() : '');
   const [file, setFile] = useState(item?.file ? item.file : '');
   const [error, setError] = useState(null); 
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const storedCategories = await AsyncStorage.getItem('categories');
+        if (storedCategories) {
+          setCategories(JSON.parse(storedCategories));
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
 const pickImage = async () => { 
   const { status } = await ImagePicker. 
@@ -75,12 +92,7 @@ const pickImage = async () => {
         };
         items.push(newItem);
         await AsyncStorage.setItem('items', JSON.stringify(items));
-        // setItemName('');
-        // setCategory('');
-        // setQuantity('');
-        // setFile('');
       }
-
       navigation.goBack();
     } catch (error) {
       console.error('Error adding/updating item:', error);
@@ -94,12 +106,6 @@ const pickImage = async () => {
               placeholder="Item Name"
               value={itemName}
               onChangeText={text => setItemName(text)}
-          />
-          <TextInput
-              style={styles.input}
-              placeholder="Category"
-              value={category}
-              onChangeText={text => setCategory(text)}
           />
           <TextInput
               style={styles.input}
@@ -128,6 +134,17 @@ const pickImage = async () => {
                 <Text style={styles.errorText}>{error}</Text> 
             )} 
             </View>
+            <View style={styles.pickerView}>
+              <Picker
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          >
+            <Picker.Item label="Select a category" value="" />
+            {categories.map((cat, index) => (
+              <Picker.Item label={cat.name} value={cat.name} key={index} />
+            ))}
+          </Picker>
+          </View>
           <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
               <Text style={styles.buttonText}>{isEditMode ? 'Save Changes' : 'Add Item'}</Text>
           </TouchableOpacity>
@@ -209,6 +226,18 @@ errorText: {
     color: "red", 
     marginTop: 16, 
 }, 
+pickerView: {
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 8,
+  marginBottom: 10,
+  overflow: 'hidden',
+},
+picker: {
+  height: 40,
+  width: '100%',
+  color: '#333', // Adjust text color
+}
 });
 
 export default AddItem;
