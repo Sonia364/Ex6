@@ -151,9 +151,7 @@ const HomeScreen = ({navigation}) => {
     <TouchableOpacity onPress={() => handleStudentPress(item)}>
         <View style={styles.userItem}>
         <View style={styles.leftContent}>
-            <Image
-            source={require('../assets/user.png')} // Path to your user image
-            style={styles.profileImage}
+        <Image source={{ uri: item.file }} style={styles.profileImage}
             />
         </View>
         <View style={styles.rightContent}>
@@ -185,9 +183,6 @@ const HomeScreen = ({navigation}) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         />
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddItem')}>
-            <Feather name="plus" size={24} color="white" />
-        </TouchableOpacity>
     </View>
   );
 };
@@ -229,7 +224,6 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 25,
   },
   rightContent: {
     flex: 1,
